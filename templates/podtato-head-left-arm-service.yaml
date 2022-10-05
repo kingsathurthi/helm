@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-head-left-arm
+  namespace: {{ default "podtato" .Release.Name }}-helm
+  labels:
+    {{- include "head" . | indent 2 }}
+spec:
+  selector:
+    {{- include "headLeftArm" . | indent 4 }}
+  ports:
+    - name: http
+      port: 9003
+      protocol: TCP
+      targetPort: 9000
+  type: ClusterIP

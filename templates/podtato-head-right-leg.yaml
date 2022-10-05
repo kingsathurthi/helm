@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-head-right-leg
+  namespace: {{ default "podtato" .Release.Name }}-helm
+  labels:
+    {{- include "head" . | indent 2 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "headRightLeg" . | indent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "headRightLeg" . | indent 6 }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: {{ .Values.rightLeg.image.name }}
+        image:  {{ .Values.rightLeg.image.repository }}:{{ .Values.rightLeg.image.tag }}
+        imagePullPolicy: {{ .Values.rightLeg.image.pullPolicy }}
+        ports:
+          - containerPort: 9000
+        env:
+          - name: PODTATO_PORT
+            value: "9000"

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-head-hat
+  namespace: {{ default "podtato" .Release.Name }}-helm
+  labels:
+    {{- include "head" . | indent 2 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "headHat" . | indent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "headHat" . | indent 6 }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: {{ .Values.hat.image.name }}
+        image:  {{ .Values.hat.image.repository }}:{{ .Values.hat.image.tag }}
+        imagePullPolicy: {{ .Values.hat.image.pullPolicy }}
+        ports:
+          - containerPort: 9000
+        env:
+          - name: PODTATO_PORT
+            value: "9000"

@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-head-left-arm
+  namespace: {{ default "podtato" .Release.Name }}-helm
+  labels:
+    {{- include "head" . | indent 2 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "headLeftArm" . | indent 4 }}
+  template:
+    metadata:
+      labels:
+        {{- include "headLeftArm" . | indent 6 }}
+    spec:
+      terminationGracePeriodSeconds: 5
+      containers:
+      - name: {{ .Values.leftArm.image.name }}
+        image:  {{ .Values.leftArm.image.repository }}:{{ .Values.leftArm.image.tag }}
+        imagePullPolicy: {{ .Values.leftArm.image.pullPolicy }}
+        ports:
+          - containerPort: 9000
+        env:
+          - name: PODTATO_PORT
+            value: "9000"
