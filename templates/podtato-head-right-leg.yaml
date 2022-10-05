@@ -16,9 +16,11 @@ spec:
     spec:
       terminationGracePeriodSeconds: 5
       containers:
-      - name: {{ .Values.rightLeg.image.name }}
-        image:  {{ .Values.rightLeg.image.repository }}:{{ .Values.rightLeg.image.tag }}
-        imagePullPolicy: {{ .Values.rightLeg.image.pullPolicy }}
+      {{- with .Values.rightLeg.image }}
+      - name: {{ .name }}
+        image:  {{ .repository }}:{{ .tag }}
+        imagePullPolicy: {{ .pullPolicy }}
+      {{- end }}
         ports:
           - containerPort: 9000
         env:
